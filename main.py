@@ -15,3 +15,29 @@ app = FastAPI()
 @app.get("/")
 def home():
     return {"message":"Good to go!"}
+
+def initialize_recognition_config():
+    
+     config_file = configparser.ConfigParser()
+     config_file.read('config.ini')
+    
+     # Initialize the speech recognition
+     config = speech.RecognitionConfig()
+    
+     # Set the configurations
+     #config.sample_rate_hertz = int(config_file.get('config','sample_rate'))
+     config.language_code = str(config_file.get('config','language_code'))
+     config.enable_speaker_diarization = True
+     config.encoding = speech.RecognitionConfig.AudioEncoding.LINEAR16  
+    # Extract the phrases list from the config.ini
+     phrases_list = (config_file.get('speech_context','phrases_list'))
+    
+     # Set the speech context to match the phrases list from the config.ini
+     speech_context = speech.SpeechContext(phrases=phrases_list)
+     config.speech_contexts = [speech_context]
+    
+    
+     # Uncomment to get confidences for each word
+     #config.enable_word_confidence = True
+    
+     return config
