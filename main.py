@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, File
 import configparser
 import os
 
@@ -16,7 +16,7 @@ app = FastAPI()
 def home():
     return {"message":"Good to go!"}
 
-@app.get("/GetTranscription")
-def get_transcription():
+@app.post("/GetTranscription")
+def get_transcription(audio_file: bytes = File(...)):
     return {"message":"Transcription Good to go!"}
 
