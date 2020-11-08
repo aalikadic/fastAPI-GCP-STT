@@ -16,6 +16,10 @@ app = FastAPI()
 def home():
     return {"message":"Good to go!"}
 
+@app.post("/GetTranscription")
+def get_transcription:
+    return {"message":"Transcription Good to go!"}
+
 def initialize_recognition_config():
     
      config_file = configparser.ConfigParser()
