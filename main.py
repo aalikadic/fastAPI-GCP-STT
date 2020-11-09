@@ -16,7 +16,7 @@ app = FastAPI()
 def home():
     return {"message":"Good to go!"}
 
-@app.post("/GetTranscription")
+@app.post("/transcribe")
 def get_transcription():
     return {"message":"Transcription Good to go!"}
 
