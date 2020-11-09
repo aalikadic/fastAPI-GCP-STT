@@ -1,6 +1,7 @@
 from fastapi import FastAPI, File
 import configparser
 import os
+from google.cloud import speech_v1p1beta1 as speech
 
 config_file = configparser.ConfigParser()
 config_file.read('config.ini')
