@@ -17,9 +17,9 @@ def home():
     return {"message":"Good to go!"}
 
 @app.post("/transcribe")
-def get_transcription():
-    return {"message":"Transcription Good to go!"}
-
-#def get_transcription(audio_file: bytes = File(...)):
+#def get_transcription():
     #return {"message":"Transcription Good to go!"}
+
+def get_transcription(audio_file: bytes = File(...)):
+    return {"message":"Transcription Good to go!"}
 
