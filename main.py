@@ -32,7 +32,7 @@ def get_transcription(audio_file: bytes = File(...)):
     # Initialize the speech recognition
     config = speech.RecognitionConfig()
     
-    config.language_code = str(config_file.get('config','language_code'))
+    config.language_code = 'bs-BA'
     config.enable_speaker_diarization = True
     config.encoding = speech.RecognitionConfig.AudioEncoding.LINEAR16  
     # Extract the phrases list from the config.ini
