@@ -6,7 +6,8 @@ import fleep
 from google.cloud import speech_v1p1beta1 as speech
 
 from fastapi import FastAPI, File, HTTPException
-#from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware import Middleware
+from starlette.middleware.cors import CORSMiddleware
 
 """FROM THE CONFIGURATION FILE PARSE THE GOOGLE CREDENTIALS"""
 config_file = configparser.ConfigParser()
@@ -15,21 +16,19 @@ config_file.read('config.ini')
 API = str(config_file.get('api','name'))
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = API
 
+origins = [
+    "*"
+   ]
+cors_middleware = [
+    Middleware(CORSMiddleware, allow_origins=origins)]
+
 """INITIALIZE A FASTAPI INSTANCE"""
 app = FastAPI(
     title = "InfoStudio Speech-To-Text API",
-    description= "This is the first version of the InfoStudio STT API that utilizes Google Cloud Speech-To-Text API. It accepts audio files with the .wav extension and returns the transcribed audio."
+    description= "This is the first version of the InfoStudio STT API that utilizes Google Cloud Speech-To-Text API. It accepts audio files with the .wav extension and returns the transcribed audio.",
+    middleware=cors_middleware
+
     )
-#origins = [
- #   "*"
-  # ]
-#app.add_middleware(
- #   CORSMiddleware,
-  #  allow_origins=origins,
-   # allow_credentials=True,
-    #allow_methods=["*"],
-    #allow_headers=["*"],
-#)
 
 """HEALTH CHECK ENDPOINT, RETURNS A SHORT MESSAGE"""
 @app.get("/")
