@@ -26,10 +26,11 @@ cors_middleware = [
 app = FastAPI(
     title = "InfoStudio Speech-To-Text API",
     description= "This is the first version of the InfoStudio STT API that utilizes Google Cloud Speech-To-Text API. It accepts audio files with the .wav extension and returns the transcribed audio.",
-    middleware=cors_middleware
+    #middleware=cors_middleware
 
     )
-
+app.add_middleware(CORSMiddleware,
+    allow_origins=["*"])
 """HEALTH CHECK ENDPOINT, RETURNS A SHORT MESSAGE"""
 @app.get("/")
 def home():
