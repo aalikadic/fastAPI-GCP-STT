@@ -29,11 +29,7 @@ app = FastAPI(
     #middleware=cors_middleware
 
     )
-app.add_middleware(CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],)
+
 """HEALTH CHECK ENDPOINT, RETURNS A SHORT MESSAGE"""
 @app.get("/")
 def home():
