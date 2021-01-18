@@ -6,8 +6,8 @@ import fleep
 from google.cloud import speech_v1p1beta1 as speech
 
 from fastapi import FastAPI, File, HTTPException
-from starlette.middleware import Middleware
-from starlette.middleware.cors import CORSMiddleware
+#from starlette.middleware import Middleware
+#from starlette.middleware.cors import CORSMiddleware
 
 """FROM THE CONFIGURATION FILE PARSE THE GOOGLE CREDENTIALS"""
 config_file = configparser.ConfigParser()
