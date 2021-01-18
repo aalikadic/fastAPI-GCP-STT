@@ -16,11 +16,7 @@ config_file.read('config.ini')
 API = str(config_file.get('api','name'))
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = API
 
-origins = [
-    "*"
-   ]
-cors_middleware = [
-    Middleware(CORSMiddleware, allow_origins=origins)]
+
 
 """INITIALIZE A FASTAPI INSTANCE"""
 app = FastAPI(
