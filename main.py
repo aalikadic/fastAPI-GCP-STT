@@ -31,7 +31,11 @@ app = FastAPI(
 def home():
     return {"message":"Health Check Passed!"}
 
-
+app.add_middleware(CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],)
 
 
 """ENDPOINT THAT SHOULD RECEIVE THE FOLLOWING INPUT:
