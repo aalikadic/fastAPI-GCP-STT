@@ -124,7 +124,7 @@ def speech_to_text(config, audio):
     
     #print_sentences(response)
     
-    return transcript, confidence, return_words(response)
+    return transcript, confidence, check_if_comma(return_words(response))
 
 """INITIALIZES THE METADATA AND ADDS IT TO THE CONFIG FILE"""
 def initialize_metadata():
@@ -216,3 +216,14 @@ def check_if_wav(audio_file):
         return True
     else:
         return False
+"""CHECKS IF THE RESPONSE CONTAINS A COMMA WRITTEN AS A WORD INSTEAD OF SIGN"""
+
+def check_if_comma(words):
+    
+    count = 0
+    for word in words:
+        
+        if word == 'zarez' or word == 'sars':
+            words[count] = ','
+        count += 1    
+    return words 
