@@ -223,7 +223,7 @@ def check_if_comma(words):
     count = 0
     for word in words:
         
-        if word == 'zarez' or word == 'sars' or word == 'koma':
+        if word == 'zarez' or word == 'sars' or word == 'koma' or word == 'zapeta':
             words[count] = ','
         count += 1    
     return words 
