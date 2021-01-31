@@ -174,9 +174,12 @@ def return_words(response):
     for i in range(0, len(best_alternative.words)):
         word = best_alternative.words[i].word
         
+        #makes the word lowercase
         word = word.lower()
         
         #word = convert_stringnumb_to_float(word)
+        #checks if the word is a number
+        word = check_if_number(word)
         
         words.append(word)
     
@@ -226,4 +229,29 @@ def check_if_comma(words):
         if word == 'zarez' or word == 'sars' or word == 'koma' or word == 'zapeta':
             words[count] = ','
         count += 1    
-    return words 
+    return words
+
+"""CHECKS IF THE WORD IS ACTUALLY A NUMBER WRITTEN USING CHARACTERS. IF YES, CONVERTS THE
+    WORD INTO A NUMBER WRITTEN AS STRING (TRI -> 3, NULA -> 0)"""
+def check_if_number(word):
+    switcher={
+        
+        'nula': '0',
+        'jedan': '1',
+        'dva': '2',
+        'tri': '3',
+        'četiri': '4',
+        'pet': '5',
+        'šest': '6',
+        'sedam': '7',
+        'osam': '8',
+        'devet': '9'}
+    
+    try:
+        # takes in the word and checks if the given word is the switcher dictionary.
+        # if yes, then it changes the word to the corresponding number ("tri"->"3"),
+        # if not, then it returns the word unchanged.
+        return switcher.get(word, word)
+    
+    except:
+        return word
