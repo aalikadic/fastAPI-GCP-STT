@@ -99,7 +99,7 @@ def initialize_recognition_config():
     phrases_list = (config_file.get('speech_context','phrases_list'))
     
     # Set the speech context to match the phrases list from the config.ini
-    speech_context = speech.SpeechContext(phrases=phrases_list)
+    speech_context = speech.SpeechContext(phrases=phrases_list, boost=20)
     config.speech_contexts = [speech_context]
     config.metadata = initialize_metadata()
     
@@ -227,7 +227,7 @@ def check_if_comma(words):
     count = 0
     for word in words:
         
-        if word in comma_words
+        if word in comma_words:
             words[count] = ','
         count += 1    
     return words
