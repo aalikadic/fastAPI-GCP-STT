@@ -179,7 +179,7 @@ def return_words(response):
         
         #word = convert_stringnumb_to_float(word)
         #checks if the word is a number
-        #word = check_if_number(word)
+        word = check_if_number(word)
         
         words.append(word)
     
