@@ -96,11 +96,11 @@ def initialize_recognition_config():
     config.enable_speaker_diarization = True
     config.encoding = speech.RecognitionConfig.AudioEncoding.LINEAR16  
     # Extract the phrases list from the config.ini
-    phrases_list = (config_file.get('speech_context','phrases_list'))
+    speech_context_kolicina = (config_file.get('speech_context','speech_context_kolicina'))
     
     # Set the speech context to match the phrases list from the config.ini
-    #speech_context = speech.SpeechContext(phrases=phrases_list, boost=20)
-    #config.speech_contexts = [speech_context]
+    speech_context = speech.SpeechContext(phrases=speech_context_kolicina, boost=20)
+    config.speech_contexts = [speech_context]
     config.metadata = initialize_metadata()
     
     
