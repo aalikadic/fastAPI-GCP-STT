@@ -51,7 +51,7 @@ app.add_middleware(CORSMiddleware,
     - transcribed_words: returns a list of every transcribed word, every word is accessible using its index.
     (i.e. transcribed_words = ['lot', 'barcode', 'potvrda', 'lota'] ==> transcribed_words[0] = 'lot').
  """
-@app.post("/transcribe",
+@app.post("/transcribe", status_code=200,
           responses = {
               404: {"description": "File Not Found"},
               415: {"description": "Unsupported Media Type"},
