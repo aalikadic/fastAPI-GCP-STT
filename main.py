@@ -222,7 +222,7 @@ def check_if_wav(audio_file):
 """CHECKS IF THE RESPONSE CONTAINS A COMMA WRITTEN AS A WORD INSTEAD OF SIGN"""
 
 def check_if_comma(words):
-    comma_words = ['zarez', 'sars', 'zapeta', 'koma']
+    comma_words = ['zarez', 'sars', 'zapeta', 'koma', 'komada']
     #comma_words = list(config_file.get('commas','comma_list'))
     count = 0
     for word in words:
