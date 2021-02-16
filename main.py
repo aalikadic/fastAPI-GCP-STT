@@ -99,7 +99,7 @@ def initialize_recognition_config():
     speech_context_kolicina = (config_file.get('speech_context','speech_context_kolicina'))
     
     # Set the speech context to match the phrases list from the config.ini
-    speech_context = speech.SpeechContext(phrases=speech_context_kolicina, boost=20)
+    speech_context = speech.SpeechContext(phrases=speech_context_kolicina, boost=5)
     config.speech_contexts = [speech_context]
     config.metadata = initialize_metadata()
     
