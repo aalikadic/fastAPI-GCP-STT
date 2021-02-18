@@ -79,10 +79,12 @@ def get_transcription(audio_file: bytes = File(...)):
         
     
     
-""" LOADS THE CONFIGURATION FROM THE config.ini FILE. RETURNS A SPEECH RECOGNITION CONFIG FILE 
-   THAT CONTAINS INFORMATION ABOUT THE SAMPLE RATE, LANGUAGE CODE, TYPE OF ENCODING, LIST OF 
-   WORDS AND PHRASES THAT ARE MORE LIKELY TO OCCUR (i.e. barkod, potvrda, lokacija, vozilo) """
+
 def initialize_recognition_config():
+    
+    """ LOADS THE CONFIGURATION FROM THE config.ini FILE. RETURNS A SPEECH RECOGNITION CONFIG FILE 
+        THAT CONTAINS INFORMATION ABOUT THE SAMPLE RATE, LANGUAGE CODE, TYPE OF ENCODING, LIST OF 
+        WORDS AND PHRASES THAT ARE MORE LIKELY TO OCCUR (i.e. barkod, potvrda, lokacija, vozilo) """
     
     config_file = configparser.ConfigParser()
     config_file.read('config.ini')
@@ -110,9 +112,11 @@ def initialize_recognition_config():
     
     return config
 
-""" THE ACTUAL TRANSCRIPTION IS DONE HERE. ACCEPTS A CONFIG FILE AND AUDIO THAT IS TO BE TRANSCRIBED. USING THE
-    GOOGLE CLOUD SPEECH TO TEXT API GETS THE TRANSCRIBED TEXT ALONG SIDE WITH THE CONFIDENCE """
+
 def speech_to_text(config, audio):
+    """ THE ACTUAL TRANSCRIPTION IS DONE HERE. ACCEPTS A CONFIG FILE AND AUDIO THAT IS TO BE TRANSCRIBED. USING THE
+        GOOGLE CLOUD SPEECH TO TEXT API GETS THE TRANSCRIBED TEXT ALONG SIDE WITH THE CONFIDENCE """
+    
     # Instantiates a client
     client = speech.SpeechClient()
     
@@ -126,8 +130,10 @@ def speech_to_text(config, audio):
     
     return transcript, confidence, check_if_comma(return_words(response))
 
-"""INITIALIZES THE METADATA AND ADDS IT TO THE CONFIG FILE"""
+
 def initialize_metadata():
+    
+    """INITIALIZES THE METADATA AND ADDS IT TO THE CONFIG FILE"""
     
     metadata = speech.RecognitionMetadata()
     metadata.interaction_type = speech.RecognitionMetadata.InteractionType.DISCUSSION
@@ -148,9 +154,10 @@ def initialize_metadata():
     metadata.industry_naics_code_of_audio = 452311
     
     return metadata
-""" PRINTS OUT THE TRANSCRIPT, CONFIDENCE AND WORD LIST TO THE CONSOLE """
+
 def print_sentences(response):
    
+    """ PRINTS OUT THE TRANSCRIPT, CONFIDENCE AND WORD LIST TO THE CONSOLE """
         
     best_alternative = response.results[0].alternatives[0]
         
@@ -165,9 +172,12 @@ def print_sentences(response):
    
 
 
-""" RETURNS ALL THE WORDS FROM THE TRANSCRIPT IN THE FORM OF A LIST WHERE EVERY WORDS CAN BE 
-    ACCESSED BY ITS INDEX """
+
 def return_words(response):
+    
+    """ RETURNS ALL THE WORDS FROM THE TRANSCRIPT IN THE FORM OF A LIST WHERE EVERY WORDS CAN BE 
+    ACCESSED BY ITS INDEX """
+    
     words = []
     best_alternative = response.results[0].alternatives[0]
     
@@ -186,8 +196,11 @@ def return_words(response):
     return words
 
 
-""" RETURNS ALL THE WORDS AS A SINGLE STRING """  
+
 def return_full_command(response):
+    
+    """ RETURNS ALL THE WORDS AS A SINGLE STRING """  
+    
     full_command = ''
     best_alternative = response.results[0].alternatives[0]
     
@@ -199,9 +212,12 @@ def return_full_command(response):
     return full_command
 
   
-""" FUNCTION THAT CONVERTS NUMBERS WRITTEN AS STRINGS INTO FLOAT
-    (i.e. "12" ==> 12.0). """    
+ 
 def convert_stringnumb_to_float(number_as_string):
+    
+    """ FUNCTION THAT CONVERTS NUMBERS WRITTEN AS STRINGS INTO FLOAT
+    (i.e. "12" ==> 12.0). """   
+    
     try: 
         convertedNumber = float(number_as_string)
         
@@ -209,9 +225,12 @@ def convert_stringnumb_to_float(number_as_string):
     except:
         
         return number_as_string
-"""CHECK IF THE SENT AUDIO FILE IS IN THE CORRECT FORMAT (.wav format)
-    IF NOT, SEND BACK AN ERROR"""
+
 def check_if_wav(audio_file):
+    
+    """CHECK IF THE SENT AUDIO FILE IS IN THE CORRECT FORMAT (.wav format)
+        IF NOT, SEND BACK AN ERROR"""
+    
     wav_str = 'wav'
     audio_info = fleep.get(audio_file)
     #print(audio_info.extension[0])
@@ -219,9 +238,12 @@ def check_if_wav(audio_file):
         return True
     else:
         return False
-"""CHECKS IF THE RESPONSE CONTAINS A COMMA WRITTEN AS A WORD INSTEAD OF SIGN"""
+
 
 def check_if_comma(words):
+    
+    """CHECKS IF THE RESPONSE CONTAINS A COMMA WRITTEN AS A WORD INSTEAD OF SIGN"""
+    
     comma_words = ['zarez', 'sars', 'zapeta', 'koma', 'komada']
     #comma_words = list(config_file.get('commas','comma_list'))
     count = 0
@@ -232,9 +254,12 @@ def check_if_comma(words):
         count += 1    
     return words
 
-"""CHECKS IF THE WORD IS ACTUALLY A NUMBER WRITTEN USING CHARACTERS. IF YES, CONVERTS THE
-    WORD INTO A NUMBER WRITTEN AS STRING (TRI -> 3, NULA -> 0)"""
+
 def check_if_number(word):
+    
+    """CHECKS IF THE WORD IS ACTUALLY A NUMBER WRITTEN USING CHARACTERS. IF YES, CONVERTS THE
+    WORD INTO A NUMBER WRITTEN AS STRING (TRI -> 3, NULA -> 0)"""
+    
     switcher={
         
         'nula': '0',
