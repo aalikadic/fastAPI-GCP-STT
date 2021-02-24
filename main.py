@@ -66,11 +66,11 @@ app.add_middleware(CORSMiddleware,
                         },
                     },
               })
-def get_transcription(company_name:str, audio_file: bytes = File(...)):
+def get_transcription(audio_file: bytes = File(...)):
     
     if check_if_wav(audio_file):
         
-        upload_file(audio_file, company_name)
+        upload_file(audio_file)
         
         audio = speech.RecognitionAudio(content=audio_file)
     
@@ -262,12 +262,12 @@ def check_if_number(word):
     
     except:
         return word
-def upload_file(audio_file, company_name):
+def upload_file(audio_file):
      
     storage_client = storage.Client()
     bucket = storage_client.get_bucket('infostudio-test-bucket')
      
-    blob_name = company_name + '_' + time.strftime('%Y-%m-%d %H:%M:%S')
+    blob_name = time.strftime('%Y-%m-%d %H:%M:%S')
     blob = bucket.blob(blob_name)
      
     blob.upload_from_string(audio_file, content_type="audio/wav")
