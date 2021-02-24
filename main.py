@@ -12,6 +12,18 @@ from fastapi import FastAPI, File, HTTPException
 #from starlette.middleware import Middleware
 from starlette.middleware.cors import CORSMiddleware
 
+"""DB CONNECTION"""
+config = {
+    'user': 'root',
+    'password': 'infostudio2021',
+    'database': 'infostudio_testdb',
+    'host': '35.234.96.126',
+    'client_flags': [ClientFlag.SSL],
+    'ssl_ca': 'ssl/server-ca.pem',
+    'ssl_cert': 'ssl/client-cert.pem',
+    'ssl_key': 'ssl/client-key.pem'
+}
+
 """FROM THE CONFIGURATION FILE PARSE THE GOOGLE CREDENTIALS"""
 config_file = configparser.ConfigParser()
 config_file.read('config.ini')
@@ -28,17 +40,7 @@ app = FastAPI(
     #middleware=cors_middleware
 
     )
-"""DB CONNECTION"""
-config = {
-    'user': 'root',
-    'password': 'infostudio2021',
-    'database': 'infostudio_testdb',
-    'host': '35.234.96.126',
-    'client_flags': [ClientFlag.SSL],
-    'ssl_ca': 'ssl/server-ca.pem',
-    'ssl_cert': 'ssl/client-cert.pem',
-    'ssl_key': 'ssl/client-key.pem'
-}
+
 
 """HEALTH CHECK ENDPOINT, RETURNS A SHORT MESSAGE"""
 @app.get("/")
@@ -271,6 +273,19 @@ def check_if_number(word):
     
     except:
         return word
+def upload_file(audio_file):
+    """Uploads the audio file to the google cloud storage"""     
+    storage_client = storage.Client()
+    bucket = storage_client.get_bucket('infostudio-test-bucket')
+    
+    upload_datetime = time.strftime('%Y-%m-%d %H:%M:%S')
+    
+    blob_name = "IS" + "_" + upload_datetime
+    blob = bucket.blob(blob_name)
+     
+    blob.upload_from_string(audio_file, content_type="audio/wav")
+
+    return blob_name, upload_datetime  
 def insert_transcription_into_db(audiofile_name, transcription, date):
     
     # now we establish our connection
