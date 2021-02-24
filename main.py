@@ -7,7 +7,7 @@ import mysql.connector
 from mysql.connector.constants import ClientFlag
 from google.cloud import storage
 from google.cloud import speech_v1p1beta1 as speech
-
+import time
 from fastapi import FastAPI, File, HTTPException
 #from starlette.middleware import Middleware
 from starlette.middleware.cors import CORSMiddleware
