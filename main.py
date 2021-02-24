@@ -3,6 +3,9 @@ import configparser
 import uvicorn
 import fleep
 
+import mysql.connector
+from mysql.connector.constants import ClientFlag
+
 from google.cloud import speech_v1p1beta1 as speech
 
 from fastapi import FastAPI, File, HTTPException
@@ -25,6 +28,17 @@ app = FastAPI(
     #middleware=cors_middleware
 
     )
+"""DB CONNECTION"""
+config = {
+    'user': 'root',
+    'password': 'infostudio2021',
+    'database': 'infostudio_testdb',
+    'host': '35.234.96.126',
+    'client_flags': [ClientFlag.SSL],
+    'ssl_ca': 'ssl/server-ca.pem',
+    'ssl_cert': 'ssl/client-cert.pem',
+    'ssl_key': 'ssl/client-key.pem'
+}
 
 """HEALTH CHECK ENDPOINT, RETURNS A SHORT MESSAGE"""
 @app.get("/")
@@ -71,7 +85,8 @@ def get_transcription(audio_file: bytes = File(...)):
         config = initialize_recognition_config()
     
         transcript, confidence, transcript_words = speech_to_text(config, audio)
-     
+        audiofile_name, upload_datetime = upload_file(audio_file)
+        insert_transcription_into_db(audiofile_name, transcript, upload_datetime)
         return {"transcript": transcript, "confidence": confidence, "transcribed_words": transcript_words}
     
     else:
@@ -256,3 +271,15 @@ def check_if_number(word):
     
     except:
         return word
+def insert_transcription_into_db(audiofile_name, transcription, date):
+    
+    # now we establish our connection
+    cnxn = mysql.connector.connect(**config)
+
+    cursor = cnxn.cursor()
+    
+    query = ("INSERT INTO transcriptions (audiofile_name, transcription, date) "
+          "VALUES (%s, %s, %s)")
+    values = [audiofile_name,transcription,date]
+    cursor.execute(query, values)
+    cnxn.commit()  # this commits changes to the database
