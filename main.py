@@ -298,3 +298,4 @@ def insert_transcription_into_db(audiofile_name, transcription, date):
     values = [audiofile_name,transcription,date]
     cursor.execute(query, values)
     cnxn.commit()  # this commits changes to the database
+    cnxn.close()
