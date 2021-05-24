@@ -26,9 +26,10 @@ app = FastAPI(
 
     )
 
-"""HEALTH CHECK ENDPOINT, RETURNS A SHORT MESSAGE"""
+
 @app.get("/")
 def home():
+    """HEALTH CHECK ENDPOINT, RETURNS A SHORT MESSAGE"""
     return {"message":"Health Check Passed!"}
 
 app.add_middleware(CORSMiddleware,
@@ -38,19 +39,7 @@ app.add_middleware(CORSMiddleware,
     allow_headers=["*"],)
 
 
-"""ENDPOINT THAT SHOULD RECEIVE THE FOLLOWING INPUT:
-    - single track (mono) WAV file
-    - sample rate 48000 Hz (any other sample rate is acceptable also, but best performance is with 48 000)
-    - all other extensions (i.e. mp3, m4a) are not acceptable.
-   
-   THE ENDPOINT RETURNS:
-    - transcript: list of transcribed words, every single letter is accessible using its index.
-    (i.e.: transcript: barcode potvrda ==> transcript[0] = b, transcript[6] = e);
-    - confidence: shows how much the Google Speech-To-Text API is confident that the transcription
-    was done properly.
-    - transcribed_words: returns a list of every transcribed word, every word is accessible using its index.
-    (i.e. transcribed_words = ['lot', 'barcode', 'potvrda', 'lota'] ==> transcribed_words[0] = 'lot').
- """
+
 @app.post("/transcribe",
           responses = {
               404: {"description": "File Not Found"},
@@ -64,6 +53,20 @@ app.add_middleware(CORSMiddleware,
                     },
               })
 def get_transcription(audio_file: bytes = File(...)):
+    """ENDPOINT THAT SHOULD RECEIVE THE FOLLOWING INPUT:
+    - single track (mono) WAV file
+    - sample rate 48000 Hz (any other sample rate is acceptable also, but best performance is with 48 000)
+    - all other extensions (i.e. mp3, m4a) are not acceptable.
+   
+   THE ENDPOINT RETURNS:
+    - transcript: list of transcribed words, every single letter is accessible using its index.
+    (i.e.: transcript: barcode potvrda ==> transcript[0] = b, transcript[6] = e);
+    - confidence: shows how much the Google Speech-To-Text API is confident that the transcription
+    was done properly.
+    - transcribed_words: returns a list of every transcribed word, every word is accessible using its index.
+    (i.e. transcribed_words = ['lot', 'barcode', 'potvrda', 'lota'] ==> transcribed_words[0] = 'lot').
+ """
+    
     
     if check_if_wav(audio_file):
         audio = speech.RecognitionAudio(content=audio_file)
@@ -79,10 +82,11 @@ def get_transcription(audio_file: bytes = File(...)):
         
     
     
-""" LOADS THE CONFIGURATION FROM THE config.ini FILE. RETURNS A SPEECH RECOGNITION CONFIG FILE 
-   THAT CONTAINS INFORMATION ABOUT THE SAMPLE RATE, LANGUAGE CODE, TYPE OF ENCODING, LIST OF 
-   WORDS AND PHRASES THAT ARE MORE LIKELY TO OCCUR (i.e. barkod, potvrda, lokacija, vozilo) """
+
 def initialize_recognition_config():
+    """ LOADS THE CONFIGURATION FROM THE config.ini FILE. RETURNS A SPEECH RECOGNITION CONFIG FILE 
+        THAT CONTAINS INFORMATION ABOUT THE SAMPLE RATE, LANGUAGE CODE, TYPE OF ENCODING, LIST OF 
+        WORDS AND PHRASES THAT ARE MORE LIKELY TO OCCUR (i.e. barkod, potvrda, lokacija, vozilo) """
     
     config_file = configparser.ConfigParser()
     config_file.read('config.ini')
@@ -110,9 +114,10 @@ def initialize_recognition_config():
     
     return config
 
+def speech_to_text(config, audio):
+    
 """ THE ACTUAL TRANSCRIPTION IS DONE HERE. ACCEPTS A CONFIG FILE AND AUDIO THAT IS TO BE TRANSCRIBED. USING THE
     GOOGLE CLOUD SPEECH TO TEXT API GETS THE TRANSCRIBED TEXT ALONG SIDE WITH THE CONFIDENCE """
-def speech_to_text(config, audio):
     # Instantiates a client
     client = speech.SpeechClient()
     
@@ -126,9 +131,9 @@ def speech_to_text(config, audio):
     
     return transcript, confidence, check_if_comma(return_words(response))
 
-"""INITIALIZES THE METADATA AND ADDS IT TO THE CONFIG FILE"""
+
 def initialize_metadata():
-    
+    """INITIALIZES THE METADATA AND ADDS IT TO THE CONFIG FILE"""
     metadata = speech.RecognitionMetadata()
     metadata.interaction_type = speech.RecognitionMetadata.InteractionType.DISCUSSION
     metadata.microphone_distance = (
@@ -147,27 +152,14 @@ def initialize_metadata():
     # https://www.naics.com/search/
     metadata.industry_naics_code_of_audio = 452311
     
-    return metadata
-""" PRINTS OUT THE TRANSCRIPT, CONFIDENCE AND WORD LIST TO THE CONSOLE """
-def print_sentences(response):
-   
-        
-    best_alternative = response.results[0].alternatives[0]
-        
-        
-    transcript = best_alternative.transcript.lower()
-    confidence = best_alternative.confidence
-    print('-' * 60)
-    print(f'Transcript: {transcript}')
-    print(f'Confidence: {confidence:.0%}')
-
-    print(return_words(response))
-   
+    return metadata  
 
 
-""" RETURNS ALL THE WORDS FROM THE TRANSCRIPT IN THE FORM OF A LIST WHERE EVERY WORDS CAN BE 
-    ACCESSED BY ITS INDEX """
+
 def return_words(response):
+    """ RETURNS ALL THE WORDS FROM THE TRANSCRIPT IN THE FORM OF A LIST WHERE EVERY WORDS CAN BE 
+    ACCESSED BY ITS INDEX """
+    
     words = []
     best_alternative = response.results[0].alternatives[0]
     
@@ -186,8 +178,9 @@ def return_words(response):
     return words
 
 
-""" RETURNS ALL THE WORDS AS A SINGLE STRING """  
+ 
 def return_full_command(response):
+    """ RETURNS ALL THE WORDS AS A SINGLE STRING """ 
     full_command = ''
     best_alternative = response.results[0].alternatives[0]
     
@@ -198,20 +191,8 @@ def return_full_command(response):
         
     return full_command
 
-  
-""" FUNCTION THAT CONVERTS NUMBERS WRITTEN AS STRINGS INTO FLOAT
-    (i.e. "12" ==> 12.0). """    
-def convert_stringnumb_to_float(number_as_string):
-    try: 
-        convertedNumber = float(number_as_string)
-        
-        return convertedNumber
-    except:
-        
-        return number_as_string
-"""CHECK IF THE SENT AUDIO FILE IS IN THE CORRECT FORMAT (.wav format)
-    IF NOT, SEND BACK AN ERROR"""
 def check_if_wav(audio_file):
+    """CHECK IF THE SENT AUDIO FILE IS IN THE CORRECT FORMAT (.wav format)"""
     wav_str = 'wav'
     audio_info = fleep.get(audio_file)
     #print(audio_info.extension[0])
@@ -219,9 +200,11 @@ def check_if_wav(audio_file):
         return True
     else:
         return False
-"""CHECKS IF THE RESPONSE CONTAINS A COMMA WRITTEN AS A WORD INSTEAD OF SIGN"""
+    
+
 
 def check_if_comma(words):
+    """CHECKS IF THE RESPONSE CONTAINS A COMMA WRITTEN AS A WORD INSTEAD OF SIGN"""
     comma_words = ['zarez', 'sars', 'zapeta', 'koma']
     #comma_words = list(config_file.get('commas','comma_list'))
     count = 0
@@ -232,9 +215,10 @@ def check_if_comma(words):
         count += 1    
     return words
 
-"""CHECKS IF THE WORD IS ACTUALLY A NUMBER WRITTEN USING CHARACTERS. IF YES, CONVERTS THE
-    WORD INTO A NUMBER WRITTEN AS STRING (TRI -> 3, NULA -> 0)"""
+
 def check_if_number(word):
+    """CHECKS IF THE WORD IS ACTUALLY A NUMBER WRITTEN USING CHARACTERS. IF YES, CONVERTS THE
+    WORD INTO A NUMBER WRITTEN AS STRING (TRI -> 3, NULA -> 0)"""
     switcher={
         
         'nula': '0',
